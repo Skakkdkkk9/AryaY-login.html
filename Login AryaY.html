@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: url('11-25-56-622_512.gif') no-repeat center center/cover;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            display: none;
+            color: black;
+        }
+
+        .active {
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container input {
+            flex: 1;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        /* Tombol Bulat */
+        #success-button {
+            display: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            font-size: 16px;
+            border: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        #success-button:hover {
+            background-color: darkred;
+        }
+    </style>
+    <script>
+        let registeredUser = null;
+
+        function showRegistration() {
+            document.getElementById('login-container').classList.remove('active');
+            document.getElementById('registration-container').classList.add('active');
+        }
+
+        function showLogin() {
+            document.getElementById('registration-container').classList.remove('active');
+            document.getElementById('login-container').classList.add('active');
+        }
+
+        function register(event) {
+            event.preventDefault();
+            const username = document.querySelector('#reg-username').value;
+            const password = document.querySelector('#reg-password').value;
+            const confirmPassword = document.querySelector('#reg-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                alert('Password dan konfirmasi password tidak cocok!');
+                return;
+            }
+
+            registeredUser = { username, password };
+            alert('Registrasi berhasil! Silakan login.');
+            showLogin();
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const username = document.querySelector('#login-username').value;
+            const password = document.querySelector('#login-password').value;
+            const agreeCheckbox = document.querySelector('#agree-checkbox').checked;
+
+            if (!agreeCheckbox) {
+                alert('Anda harus menyetujui untuk login!');
+                return;
+            }
+
+            if (!registeredUser || username !== registeredUser.username || password !== registeredUser.password) {
+                document.getElementById('login-error').textContent = 'Nama atau password salah!';
+            } else {
+                alert('Login berhasil!');
+                document.getElementById('login-error').textContent = '';
+                document.getElementById('success-button').style.display = 'block';
+            }
+        }
+
+        function togglePasswordVisibility(id, iconId) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById(iconId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = '🙈'; // Ikon sembunyikan
+            } else {
+                input.type = 'password';
+                icon.textContent = '👁️'; // Ikon perlihatkan
+            }
+        }
+
+        function onSuccessButtonClick() {
+            window.location.href = 'AryaY_Portofolio.html'; // Arahkan ke portofolio
+        }
+    </script>
+</head>
+<body>
+    <audio autoplay loop muted>
+    <source src="akon_beautiful.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+    <!-- Login Form -->
+    <div id="login-container" class="container active">
+        <h1>Login</h1>
+        <form onsubmit="login(event)">
+            <input type="text" id="login-username" name="username" placeholder="Username" required>
+            <div class="password-container">
+                <input type="password" id="login-password" name="password" placeholder="Password" required>
+                <span class="password-toggle" id="login-toggle" onclick="togglePasswordVisibility('login-password', 'login-toggle')">👁️</span>
+            </div>
+            <div>
+                <input type="checkbox" id="agree-checkbox">
+                <label for="agree-checkbox">Saya setuju untuk login di sini</label>
+            </div>
+            <button type="submit">Login</button>
+            <p id="login-error" class="error"></p>
+        </form>
+        <a href="javascript:void(0);" onclick="showRegistration()" style="color: red;">daftar akun dulu kalau belum punya</a>
+    </div>
+
+    <!-- Registration Form -->
+    <div id="registration-container" class="container">
+        <h1>Registrasi</h1>
+        <form onsubmit="register(event)">
+            <input type="text" id="reg-username" name="name" placeholder="Masukan Nama Anda" required>
+            <div class="password-container">
+                <input type="password" id="reg-password" name="password" placeholder="Password" required>
+                <span class="password-toggle" id="reg-toggle" onclick="togglePasswordVisibility('reg-password', 'reg-toggle')">👁️</span>
+            </div>
+            <div class="password-container">
+                <input type="password" id="reg-confirm-password" name="confirm-password" placeholder="Masukan ulang password kamu" required>
+                <span class="password-toggle" id="reg-confirm-toggle" onclick="togglePasswordVisibility('reg-confirm-password', 'reg-confirm-toggle')">👁️</span>
+            </div>
+            <button type="submit">Daftar</button>
+        </form>
+        <a href="javascript:void(0);" onclick="showLogin()">Kembali ke login</a>
+    </div>
+
+    <!-- Tombol Bulat -->
+    <button id="success-button" onclick="onSuccessButtonClick()">click AryaY</button>
+</body>
